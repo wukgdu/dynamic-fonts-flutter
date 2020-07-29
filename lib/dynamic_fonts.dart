@@ -61,7 +61,7 @@ class DynamicFonts {
   ///
   /// Returns a map where the key is the name of the font family and the value
   /// is the corresponding [DynamicFonts] method.
-  static Map<String, TextStyleBuilder> asMap() => _styleMap;
+  static Map<String, TextStyleBuilder> asMap() => Map.unmodifiable(_styleMap);
 
   static Map<String, TextThemeBuilder> _themeMap = {};
 
@@ -69,7 +69,8 @@ class DynamicFonts {
   ///
   /// Returns a map where the key is the name of the font family and the value
   /// is the corresponding [DynamicFonts] `TextTheme` method.
-  static Map<String, TextThemeBuilder> _asMapOfTextThemes() => _themeMap;
+  static Map<String, TextThemeBuilder> _asMapOfTextThemes() =>
+      Map.unmodifiable(_themeMap);
 
   static void register(String familyName,
       Map<DynamicFontsVariant, DynamicFontsFile> variantMap) {
