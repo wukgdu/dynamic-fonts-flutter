@@ -1,3 +1,3 @@
-# google_fonts_sample_app
+# dynamic_fonts_sample_app
 
-This example application demonstrates how to use [<kbd>google_fonts</kbd>](https://pub.dev/packages/google_fonts) within a simple Flutter app.
+This example application demonstrates how to use [<kbd>dynamic_fonts</kbd>](https://pub.dev/packages/dynamic_fonts) within a simple Flutter app.

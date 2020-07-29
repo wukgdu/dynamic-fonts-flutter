@@ -1,52 +1,130 @@
-# google_fonts
+# dynamic_fonts
 
-The `google_fonts` package for Flutter allows you to easily use any of the 977 fonts
-(and their variants) from [fonts.google.com](https://fonts.google.com/) in your Flutter app.
+The `dynamic_fonts` package for Flutter allows you to (relatively) easily add
+dynamically loaded web-hosted fonts to your appーjust like the
+[google_fonts](https://pub.dev/packages/google_fonts) package, but for any
+arbitrary fonts hosted anywhere.
+
+`dynamic_fonts` is a fork of `google_fonts` with more of the API exposed so that
+you can specify your own fonts.
 
 ## Getting Started
 
-![](https://raw.githubusercontent.com/material-foundation/google-fonts-flutter/master/readme_images/main.gif)
+With the `dynamic_fonts` package, `.ttf` or `.otf` files do not need to be
+stored in your assets folder and mapped in the pubspec. Instead, they can be
+fetched once via http at runtime, and cached in the app's file system. This is
+ideal for development, and can be the preferred behavior for production apps
+that are looking to reduce the app bundle size. Still, you may at any time
+choose to include the font file in the assets, and the Dynamic Fonts package
+will prioritize pre-bundled files over http fetching.  Because of this, the
+Dynamic Fonts package allows developers to choose between pre-bundling the fonts
+and loading them over http, while using the same API.
 
-With the `google_fonts` package, `.ttf` or `.otf` files do not need to be stored in your assets folder and mapped in
-the pubspec. Instead, they can be fetched once via http at runtime, and cached in the app's file system. This is ideal for development, and can be the preferred behavior for production apps that
-are looking to reduce the app bundle size. Still, you may at any time choose to include the font file in the assets, and the Google Fonts package will prioritize pre-bundled files over http fetching.
-Because of this, the Google Fonts package allows developers to choose between pre-bundling the fonts and loading them over http, while using the same API.
+For example, say you want to use the
+[FiraGO](https://github.com/bBoxType/FiraGO) font (*not* in Google Fonts) in
+your Flutter app.
 
-For example, say you want to use the [Lato](https://fonts.google.com/specimen/Lato) font from Google Fonts in your Flutter app.
+First, add the `dynamic_fonts` package to your [pubspec
+dependencies](https://pub.dev/packages/dynamic_fonts#-installing-tab-).
 
-First, add the `google_fonts` package to your [pubspec dependencies](https://pub.dev/packages/google_fonts#-installing-tab-).
-
-To import `GoogleFonts`:
+To import `DynamicFonts`:
 
 ```dart
-import 'package:google_fonts/google_fonts.dart';
+import 'package:dynamic_fonts/dynamic_fonts.dart';
 ```
 
-To use `GoogleFonts` with the default TextStyle:
+### Registering a font
+
+To register your font with `DynamicFonts`, you will need to supply the family
+name and a map of `DynamicFontsVariant` to `DynamicFontsFile`.
+
+- `DynamicFontsVariant` merely indicates font weight and font style (normal vs
+  italic)
+- `DynamicFontsFile` stores checksum info and provides the URL for the file
+
+If we want to download FiraGO from the repo hosted on GitHub (*don't do this in
+a production app!*), the URL depends on the variant, so we need to do something
+like this:
+
+```dart
+class FiraGoFile extends DynamicFontsFile {
+  FiraGoFile(this.variant, String expectedFileHash, int expectedLength)
+      : super(expectedFileHash, expectedLength);
+
+  final DynamicFontsVariant variant;
+
+  String get _dir {
+    switch (variant.fontStyle) {
+      case FontStyle.normal:
+        return 'Roman';
+      case FontStyle.italic:
+        return 'Italic';
+    }
+    throw Exception('Unknown style: ${variant.fontStyle}');
+  }
+
+  @override
+  String get url =>
+      'https://raw.githubusercontent.com/bBoxType/FiraGO/9882ba0851f88ab904dc237f250db1d45641f45d/Fonts/FiraGO_TTF_1001/$_dir/FiraGO-${variant.toApiFilenamePart()}.ttf';
+}
+```
+
+Now we can register the font like so, supplying the SHA256 and file sizes for
+security. (Actual SHA256 values not shown!)
+
+```dart
+DynamicFonts.register(
+  'FiraGO',
+  [
+    FiraGoFile(
+      const DynamicFontsVariant(
+        fontWeight: FontWeight.w400,
+        fontStyle: FontStyle.normal,
+      ),
+      '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      804888,
+    ),
+    FiraGoFile(
+      const DynamicFontsVariant(
+        fontWeight: FontWeight.w700,
+        fontStyle: FontStyle.normal,
+      ),
+      '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      807140,
+    ),
+    FiraGoFile(
+      const DynamicFontsVariant(
+        fontWeight: FontWeight.w400,
+        fontStyle: FontStyle.italic,
+      ),
+      '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      813116,
+    ),
+  ].fold<Map<DynamicFontsVariant, DynamicFontsFile>>(
+    {},
+    (acc, file) => acc..[file.variant] = file,
+  ),
+);
+```
+
+### Using a font
+
+To use `DynamicFonts` with the default TextStyle:
 
 ```dart
 Text(
-  'This is Google Fonts',
-  style: GoogleFonts.lato(),
+  'This is Dynamic Fonts',
+  style: DynamicFonts.getFont('FiraGO'),
 ),
 ```
 
-Or, if you want to load the font dynamically:
+To use `DynamicFonts` with an existing `TextStyle`:
 
 ```dart
 Text(
-  'This is Google Fonts',
-  style: GoogleFonts.getFont('Lato'),
-),
-```
-
-To use `GoogleFonts` with an existing `TextStyle`:
-
-```dart
-Text(
-  'This is Google Fonts',
-  style: GoogleFonts.lato(
-    textStyle: TextStyle(color: Colors.blue, letterSpacing: .5),
+  'This is Dynamic Fonts',
+  style: DynamicFonts.getFont(
+    'FiraGO', textStyle: TextStyle(color: Colors.blue, letterSpacing: .5),
   ),
 ),
 ```
@@ -55,8 +133,11 @@ or
 
 ```dart
 Text(
-  'This is Google Fonts',
-  style: GoogleFonts.lato(textStyle: Theme.of(context).textTheme.display1),
+  'This is Dynamic Fonts',
+  style: DynamicFonts.getFont(
+    'FiraGO',
+    textStyle: Theme.of(context).textTheme.display1,
+  ),
 ),
 ```
 
@@ -64,8 +145,9 @@ To override the `fontSize`, `fontWeight`, or `fontStyle`:
 
 ```dart
 Text(
-  'This is Google Fonts',
-  style: GoogleFonts.lato(
+  'This is Dynamic Fonts',
+  style: DynamicFonts.getFont(
+    'FiraGO',
     textStyle: Theme.of(context).textTheme.display1,
     fontSize: 48,
     fontWeight: FontWeight.w700,
@@ -74,27 +156,30 @@ Text(
 ),
 ```
 
-You can also use `GoogleFonts.latoTextTheme()` to make or modify an entire text theme to use the "Lato" font.
+You can also use `DynamicFonts.getTextTheme()` to make or modify an entire text
+theme to use the "FiraGO" font.
 
 ```dart
 MaterialApp(
   theme: ThemeData(
-    textTheme: GoogleFonts.latoTextTheme(
+    textTheme: DynamicFonts.getTextTheme(
+      'FiraGO',
       Theme.of(context).textTheme,
     ),
   ),
 );
 ```
 
-Or, if you want a `TextTheme` where a couple of styles should use a different font:
+Or, if you want a `TextTheme` where a couple of styles should use a different
+font:
 
 ```dart
 final textTheme = Theme.of(context).textTheme;
 
 MaterialApp(
   theme: ThemeData(
-    textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-      body1: GoogleFonts.oswald(textStyle: textTheme.body1),
+    textTheme: DynamicFonts.getTextTheme('FiraGO', textTheme).copyWith(
+      body1: DynamicFonts.getFont('OtherFont', textStyle: textTheme.body1),
     ),
   ),
 );
@@ -102,13 +187,13 @@ MaterialApp(
 
 ### Bundling font files in your application's assets
 
-The `google_fonts` package will automatically use matching font files in your `pubspec.yaml`'s
-`assets` (rather than fetching them at runtime via HTTP). Once you've settled on the fonts
-you want to use:
+The `dynamic_fonts` package will automatically use matching font files in your
+`pubspec.yaml`'s `assets` (rather than fetching them at runtime via HTTP). Once
+you've settled on the fonts you want to use:
 
-1. Download the font files from [https://fonts.google.com](https://fonts.google.com).
-You only need to download the weights and styles you are using for any given family.
-Italic styles will include `Italic` in the filename. Font weights map to file names as follows:
+1. Download the font files from wherever.  You only need to download the weights
+and styles you are using for any given family.  Italic styles will include
+`Italic` in the filename. Font weights map to file names as follows:
 
 ```dart
 {
@@ -124,33 +209,31 @@ Italic styles will include `Italic` in the filename. Font weights map to file na
 }
 ```
 
-2. Move those fonts to a top-level app directory (e.g. `google_fonts`).
+2. Move those fonts to a top-level app directory (e.g. `dynamic_fonts`).
 
-![](https://raw.githubusercontent.com/material-foundation/google-fonts-flutter/master/readme_images/google_fonts_folder.png)
+3. Ensure that you have listed the folder (e.g. `dynamic_fonts/`) in your
+   `pubspec.yaml` under `assets`.
 
-3. Ensure that you have listed the folder (e.g. `google_fonts/`) in your `pubspec.yaml` under `assets`.
-
-![](https://raw.githubusercontent.com/material-foundation/google-fonts-flutter/master/readme_images/google_fonts_pubspec_assets.png)
-
-Note: Since these files are listed as assets, there is no need to list them in the `fonts` section
-of the `pubspec.yaml`. This can be done because the files are consistently named from the Google Fonts API
-(so be sure not to rename them!)
+Note: If your fonts' names do not match up with the Google Font naming
+conventions, you will either have to register them in the `fonts` section of
+`pubspec.yaml`, or rename them.
 
 ### Licensing Fonts
-The fonts on [fonts.google.com](https://fonts.google.com/) include license files for each font. For
-example, the [Lato](https://fonts.google.com/specimen/Lato) font comes with an `OFL.txt` file.
+Be sure to check the licenses of your fonts. For instance FiraGO comes with an
+`OFL.txt` file.
 
-Once you've decided on the fonts you want in your published app, you should add the appropriate
-licenses to your flutter app's [LicenseRegistry](https://api.flutter.dev/flutter/foundation/LicenseRegistry-class.html).
+Once you've decided on the fonts you want in your published app, you should add
+the appropriate licenses to your flutter app's
+[LicenseRegistry](https://api.flutter.dev/flutter/foundation/LicenseRegistry-class.html).
 
 For example:
 ```dart
 void main() {
   LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('google_fonts/OFL.txt');
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    final license = await rootBundle.loadString('dynamic_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['dynamic_fonts'], license);
   });
-  
+
   runApp(...);
 }
 ```

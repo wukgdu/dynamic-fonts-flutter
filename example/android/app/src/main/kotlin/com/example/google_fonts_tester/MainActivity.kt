@@ -1,4 +1,4 @@
-package com.example.google_fonts_tester
+package com.example.dynamic_fonts_tester
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

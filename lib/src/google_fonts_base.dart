@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:pedantic/pedantic.dart';
 
-import '../google_fonts.dart';
+import '../dynamic_fonts.dart';
 import 'asset_manifest.dart';
 import 'google_fonts_descriptor.dart';
 import 'google_fonts_family_with_variant.dart';
@@ -161,7 +161,7 @@ Future<void> loadFontIfNecessary(GoogleFontsDescriptor descriptor) async {
     }
 
     // Attempt to load this font via http, unless disallowed.
-    if (GoogleFonts.config.allowRuntimeFetching) {
+    if (DynamicFonts.config.allowRuntimeFetching) {
       byteData = _httpFetchFontAndSaveToDevice(
         familyWithVariantString,
         descriptor.file,
