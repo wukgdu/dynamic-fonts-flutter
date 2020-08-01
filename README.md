@@ -8,6 +8,19 @@ arbitrary fonts hosted anywhere.
 `dynamic_fonts` is a fork of `google_fonts` with more of the API exposed so that
 you can specify your own fonts.
 
+## Why would you use this?
+
+If there is a font that you know you're going to use in your app, just bundle it
+normally. Don't bother with this package.
+
+But if your app e.g. offers users multiple choices of fonts, and
+
+1. Some fonts may not be used at all, depending on user preferences
+2. Bundling all of the fonts would bloat your app too much
+
+then this package gives you a convenient way to load your fonts dynamically and
+keep your initial download slim.
+
 ## Getting Started
 
 With the `dynamic_fonts` package, `.ttf` or `.otf` files do not need to be
