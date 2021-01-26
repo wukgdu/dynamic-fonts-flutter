@@ -1,3 +1,7 @@
+## [1.1.2] - 2021-01-26
+
+* [google_fonts] Bump dependency constraints for null safety.
+
 ## [1.1.1] - 2020-10-02
 
 * [google_fonts] Use conditional imports to separate out web from destkop + mobile file_io implementations.
