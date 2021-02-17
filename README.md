@@ -147,10 +147,7 @@ or
 ```dart
 Text(
   'This is Dynamic Fonts',
-  style: DynamicFonts.getFont(
-    'FiraGO',
-    textStyle: Theme.of(context).textTheme.display1,
-  ),
+  style: DynamicFonts.getFont('FiraGO', textStyle: Theme.of(context).textTheme.headline4),
 ),
 ```
 
@@ -161,7 +158,7 @@ Text(
   'This is Dynamic Fonts',
   style: DynamicFonts.getFont(
     'FiraGO',
-    textStyle: Theme.of(context).textTheme.display1,
+    textStyle: Theme.of(context).textTheme.headline4,
     fontSize: 48,
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.italic,

@@ -20,28 +20,28 @@ class _Config {
 }
 
 typedef TextStyleBuilder = TextStyle Function({
-  TextStyle textStyle,
-  Color color,
-  Color backgroundColor,
-  double fontSize,
-  FontWeight fontWeight,
-  FontStyle fontStyle,
-  double letterSpacing,
-  double wordSpacing,
-  TextBaseline textBaseline,
-  double height,
-  Locale locale,
-  Paint foreground,
-  Paint background,
-  List<ui.Shadow> shadows,
-  List<ui.FontFeature> fontFeatures,
-  TextDecoration decoration,
-  Color decorationColor,
-  TextDecorationStyle decorationStyle,
-  double decorationThickness,
+  TextStyle? textStyle,
+  Color? color,
+  Color? backgroundColor,
+  double? fontSize,
+  FontWeight? fontWeight,
+  FontStyle? fontStyle,
+  double? letterSpacing,
+  double? wordSpacing,
+  TextBaseline? textBaseline,
+  double? height,
+  Locale? locale,
+  Paint? foreground,
+  Paint? background,
+  List<ui.Shadow>? shadows,
+  List<ui.FontFeature>? fontFeatures,
+  TextDecoration? decoration,
+  Color? decorationColor,
+  TextDecorationStyle? decorationStyle,
+  double? decorationThickness,
 });
 
-typedef TextThemeBuilder = TextTheme Function([TextTheme]);
+typedef TextThemeBuilder = TextTheme Function([TextTheme?]);
 
 class DynamicFonts {
   /// Configuration for the [DynamicFonts] library.
@@ -90,32 +90,31 @@ class DynamicFonts {
   /// [fontFamily] exists.
   static TextStyle getFont(
     String fontFamily, {
-    TextStyle textStyle,
-    Color color,
-    Color backgroundColor,
-    double fontSize,
-    FontWeight fontWeight,
-    FontStyle fontStyle,
-    double letterSpacing,
-    double wordSpacing,
-    TextBaseline textBaseline,
-    double height,
-    Locale locale,
-    Paint foreground,
-    Paint background,
-    List<ui.Shadow> shadows,
-    List<ui.FontFeature> fontFeatures,
-    TextDecoration decoration,
-    Color decorationColor,
-    TextDecorationStyle decorationStyle,
-    double decorationThickness,
+    TextStyle? textStyle,
+    Color? color,
+    Color? backgroundColor,
+    double? fontSize,
+    FontWeight? fontWeight,
+    FontStyle? fontStyle,
+    double? letterSpacing,
+    double? wordSpacing,
+    TextBaseline? textBaseline,
+    double? height,
+    Locale? locale,
+    Paint? foreground,
+    Paint? background,
+    List<ui.Shadow>? shadows,
+    List<ui.FontFeature>? fontFeatures,
+    TextDecoration? decoration,
+    Color? decorationColor,
+    TextDecorationStyle? decorationStyle,
+    double? decorationThickness,
   }) {
-    assert(fontFamily != null);
     final fonts = DynamicFonts.asMap();
     if (!fonts.containsKey(fontFamily)) {
       throw Exception("No font family by name '$fontFamily' was found.");
     }
-    return fonts[fontFamily](
+    return fonts[fontFamily]!(
       textStyle: textStyle,
       color: color,
       backgroundColor: backgroundColor,
@@ -147,32 +146,31 @@ class DynamicFonts {
   ///
   /// Parameter [fontFamily] must not be `null`. Throws if no font by name
   /// [fontFamily] exists.
-  static TextTheme getTextTheme(String fontFamily, [TextTheme textTheme]) {
-    assert(fontFamily != null);
+  static TextTheme getTextTheme(String fontFamily, [TextTheme? textTheme]) {
     final fonts = _asMapOfTextThemes();
     if (!fonts.containsKey(fontFamily)) {
       throw Exception("No font family by name '$fontFamily' was found.");
     }
-    return fonts[fontFamily](textTheme);
+    return fonts[fontFamily]!(textTheme);
   }
 
   static TextThemeBuilder themeBuilder(TextStyleBuilder styleBuilder) =>
       ([textTheme]) {
         textTheme ??= ThemeData.light().textTheme;
         return TextTheme(
-          headline1: styleBuilder(textStyle: textTheme?.headline1),
-          headline2: styleBuilder(textStyle: textTheme?.headline2),
-          headline3: styleBuilder(textStyle: textTheme?.headline3),
-          headline4: styleBuilder(textStyle: textTheme?.headline4),
-          headline5: styleBuilder(textStyle: textTheme?.headline5),
-          headline6: styleBuilder(textStyle: textTheme?.headline6),
-          subtitle1: styleBuilder(textStyle: textTheme?.subtitle1),
-          subtitle2: styleBuilder(textStyle: textTheme?.subtitle2),
-          bodyText1: styleBuilder(textStyle: textTheme?.bodyText1),
-          bodyText2: styleBuilder(textStyle: textTheme?.bodyText2),
-          caption: styleBuilder(textStyle: textTheme?.caption),
-          button: styleBuilder(textStyle: textTheme?.button),
-          overline: styleBuilder(textStyle: textTheme?.overline),
+          headline1: styleBuilder(textStyle: textTheme.headline1),
+          headline2: styleBuilder(textStyle: textTheme.headline2),
+          headline3: styleBuilder(textStyle: textTheme.headline3),
+          headline4: styleBuilder(textStyle: textTheme.headline4),
+          headline5: styleBuilder(textStyle: textTheme.headline5),
+          headline6: styleBuilder(textStyle: textTheme.headline6),
+          subtitle1: styleBuilder(textStyle: textTheme.subtitle1),
+          subtitle2: styleBuilder(textStyle: textTheme.subtitle2),
+          bodyText1: styleBuilder(textStyle: textTheme.bodyText1),
+          bodyText2: styleBuilder(textStyle: textTheme.bodyText2),
+          caption: styleBuilder(textStyle: textTheme.caption),
+          button: styleBuilder(textStyle: textTheme.button),
+          overline: styleBuilder(textStyle: textTheme.overline),
         );
       };
 
@@ -229,8 +227,8 @@ class DynamicFonts {
 /// Represents a font variant in Flutter-specific types.
 class DynamicFontsVariant extends GoogleFontsVariant {
   const DynamicFontsVariant({
-    @required FontWeight fontWeight,
-    @required FontStyle fontStyle,
+    required FontWeight fontWeight,
+    required FontStyle fontStyle,
   }) : super(fontWeight: fontWeight, fontStyle: fontStyle);
 }
 
@@ -259,5 +257,5 @@ abstract class DynamicFontsFile extends GoogleFontsFile {
   DynamicFontsFile(String expectedFileHash, int expectedLength)
       : super(expectedFileHash, expectedLength);
 
-  String url;
+  String get url;
 }

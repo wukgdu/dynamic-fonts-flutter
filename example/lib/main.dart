@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle display1 = Theme.of(context).textTheme.headline4;
+    final TextStyle headline4 = Theme.of(context).textTheme.headline4!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               'You have pushed the button this many times:',
-              style: DynamicFonts.getFont('FiraGO', textStyle: display1),
+              style: DynamicFonts.getFont('FiraGO', textStyle: headline4),
             ),
             Text(
               '$_counter',
@@ -112,7 +112,6 @@ class _FiraGoFile extends DynamicFontsFile {
       case FontStyle.italic:
         return 'Italic';
     }
-    throw Exception('Unknown style: ${variant.fontStyle}');
   }
 
   @override
