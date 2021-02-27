@@ -1,10 +1,7 @@
-## [2.0.0-nullsafety.0] - 2021-02-11
+## [2.0.0] - 2021-02-26
 
 * [google_fonts] Migrated the main library to null safety.
-  * One method (`getApplicationSupportDirectory`, from `path_provider`), has not been migrated yet.
-  * Most tests are not migrated yet, but all tests are passing.
-  * Generator is not migrated yet, but generated code is null-safe.
-* [google_fonts] Migrated example to null safety.
+* [google_fonts] Require Dart 2.12 or greater.
 
 ## [1.1.2] - 2021-01-26
 
