@@ -21,7 +21,7 @@ class MockHttpClient extends Mock implements http.Client {
   }
 }
 
-class MockAssetManifest extends Mock implements AssetManifest {}
+class MockAssetManifestDF extends Mock implements AssetManifestDF {}
 
 const _fakeResponse = 'fake response body - success';
 // The number of bytes in _fakeResponse.
@@ -52,7 +52,7 @@ void main() {
   setUp(() async {
     _httpClient = MockHttpClient();
     httpClient = _httpClient;
-    assetManifest = MockAssetManifest();
+    assetManifest = MockAssetManifestDF();
     DynamicFonts.config.allowRuntimeFetching = true;
     when(_httpClient.gets(any)).thenAnswer((_) async {
       return http.Response(_fakeResponse, 200);

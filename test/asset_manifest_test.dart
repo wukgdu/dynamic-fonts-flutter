@@ -12,7 +12,7 @@ import 'package:dynamic_fonts/src/asset_manifest.dart';
 const _fakeAssetManifestText = '{"value": ["fake"]}';
 var _assetManifestLoadCount = 0;
 
-late AssetManifest assetManifest;
+late AssetManifestDF assetManifest;
 
 void main() {
   setUpAll(() async {
@@ -24,12 +24,12 @@ void main() {
     });
     // Disable cache so that we can see if AssetManifest.json is requested more
     // than once.
-    assetManifest = AssetManifest(enableCache: false);
+    assetManifest = AssetManifestDF(enableCache: false);
   });
 
   tearDown(() async {
     _assetManifestLoadCount = 0;
-    AssetManifest.reset();
+    AssetManifestDF.reset();
   });
 
   testWidgets('AssetManifest loads once when called multiple times in parallel',

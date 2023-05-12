@@ -30,7 +30,7 @@ final Set<String> _loadedFonts = {};
 http.Client httpClient = http.Client();
 
 @visibleForTesting
-AssetManifest assetManifest = AssetManifest();
+AssetManifestDF assetManifest = AssetManifestDF();
 
 @visibleForTesting
 void clearCache() => _loadedFonts.clear();
